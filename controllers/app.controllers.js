@@ -1,11 +1,17 @@
 const { selectAllTopics } = require("../models/app.models");
 
-exports.getApi = (req, res) => {
-	res.status(200).send({ msg: "We did it" });
+exports.getAllTopics = (req, res, next) => {
+	selectAllTopics()
+		.then((topics) => {
+			res.status(200).send({ topics });
+		})
+		.catch(next);
 };
 
-exports.getAllTopics = (req, res) => {
-	selectAllTopics().then((topics) => {
-		res.status(200).send({ topics });
-	});
+exports.getAllEndpoints = (req, res, next) => {
+	selectAllEndpoints()
+		.then((endpoints) => {
+			res.status(200).send({ endpoints });
+		})
+		.catch(next);
 };
