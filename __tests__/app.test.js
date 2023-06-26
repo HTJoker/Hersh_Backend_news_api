@@ -22,3 +22,19 @@ describe("GET /api", () => {
 			});
 	});
 });
+
+describe("GET /api/topics", () => {
+	it("should return an array of all the topics when a get request is made", () => {
+		return request(app)
+			.get("/api/topics")
+			.expect(200)
+			.then(({ body: { topics } }) => {
+				topics.forEach((topic) => {
+					expect(topic).toMatchObject({
+						slug: expect.any(String),
+						description: expect.any(String),
+					});
+				});
+			});
+	});
+});

@@ -7,4 +7,5 @@ app.get("/api", getApi);
 
 app.get("/api/topics", getAllTopics);
 
+
 module.exports = app;
