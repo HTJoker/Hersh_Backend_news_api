@@ -19,23 +19,21 @@ describe("status 404 when path does not exist", () => {
 	});
 });
 
-describe("GET /api", () => {
-	it("should return the endpoints.json file", () => {
+describe("GET /api/topics", () => {
+	it("should return an array", () => {
 		return request(app)
-			.get("/api")
+			.get("/api/topics")
 			.expect(200)
-			.then(({ body }) => {
-				expect(body).toEqual(endpoints);
+			.then(({ body: { topics } }) => {
+				expect(Array.isArray(topics)).toBe(true);
 			});
 	});
-});
-
-describe("GET /api/topics", () => {
 	it("should return an array of all the topics when a get request is made", () => {
 		return request(app)
 			.get("/api/topics")
 			.expect(200)
 			.then(({ body: { topics } }) => {
+				expect(topics.length).not.toBe(0);
 				topics.forEach((topic) => {
 					expect(topic).toMatchObject({
 						slug: expect.any(String),

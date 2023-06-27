@@ -5,6 +5,7 @@ exports.getApi = (req, res) => {
 	res.status(200).send(endpoints);
 };
 
+
 exports.getAllTopics = (req, res, next) => {
 	selectAllTopics()
 		.then((topics) => {
