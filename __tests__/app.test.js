@@ -70,4 +70,12 @@ describe("GET /api/articles/:article_id", () => {
 				expect(body.msg).toBe("Bad Request!");
 			});
 	});
+	it("status 404: returns not found when id is not in the array", () => {
+		return request(app)
+			.get("/api/articles/99999")
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe("Not found");
+			});
+	});
 });
