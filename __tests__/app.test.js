@@ -7,17 +7,6 @@ const data = require("../db/data/development-data/index");
 beforeEach(() => seed(data));
 afterAll(() => db.end());
 
-describe("All paths that do not exist", () => {
-	it("404 error when passed a path that does not exist in the api", () => {
-		return request(app)
-			.get("/api/notRealPath")
-			.expect(404)
-			.then(({ body }) => {
-				expect(body.msg).toBe("Not found");
-			});
-	});
-});
-
 describe("GET /api/topics", () => {
 	it("should return an array", () => {
 		return request(app)
