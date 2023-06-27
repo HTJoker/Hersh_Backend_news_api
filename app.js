@@ -1,8 +1,5 @@
 const express = require("express");
-const {
-	getAllTopics,
-	getAllEndpoints,
-} = require("./controllers/app.controllers");
+const { getAllTopics } = require("./controllers/app.controllers");
 const { handleServerError } = require("./errors");
 
 const app = express();
