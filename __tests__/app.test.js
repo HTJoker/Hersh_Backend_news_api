@@ -43,3 +43,39 @@ describe("GET /api/topics", () => {
 			});
 	});
 });
+
+describe("GET /api/articles/:article_id", () => {
+	it("status 200: return an individual article", () => {
+		return request(app)
+			.get("/api/articles/1")
+			.expect(200)
+			.then(({ body: { article } }) => {
+				expect(article).toMatchObject({
+					title: expect.any(String),
+					topic: expect.any(String),
+					author: expect.any(String),
+					article_id: expect.any(Number),
+					body: expect.any(String),
+					created_at: expect.any(String),
+					votes: expect.any(Number),
+					article_img_url: expect.any(String),
+				});
+			});
+	});
+	it("status 400: return Bad request when given wrong id", () => {
+		return request(app)
+			.get("/api/articles/banana")
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe("Bad Request!");
+			});
+	});
+	it("status 404: returns not found when id is not in the array", () => {
+		return request(app)
+			.get("/api/articles/99999")
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe("Not found");
+			});
+	});
+});
