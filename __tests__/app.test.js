@@ -3,22 +3,29 @@ const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/development-data/index");
+const endpoints = require("../endpoints.json");
 
-beforeEach(() => {
-	return seed(data);
-});
+beforeEach(() => seed(data));
+afterAll(() => db.end());
 
-afterAll(() => {
-	return db.end();
+describe("status 404 when path does not exist", () => {
+	it("should return not found with the wrong path is given", () => {
+		return request(app)
+			.get("/api/notRealPath")
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe("Not found");
+			});
+	});
 });
 
 describe("GET /api", () => {
-	it("should return 200 ok message", () => {
+	it("should return the endpoints.json file", () => {
 		return request(app)
 			.get("/api")
 			.expect(200)
 			.then(({ body }) => {
-				expect(body.msg).toBe("We did it");
+				expect(body).toEqual(endpoints);
 			});
 	});
 });
