@@ -5,3 +5,7 @@ exports.selectAllTopics = () => {
 		return rows
 	});
 };
+
+exports.selectAllEndpoints = () => {
+	console.log("hello");
+}

@@ -6,8 +6,8 @@
 	"scripts": {
 		"setup-dbs": "psql -f ./db/setup.sql",
 		"seed": "PGDATABASE=nc_news && node ./db/seeds/run-seed.js",
-		"test": "jest",
-		"prepare": "husky install"
+		"test": "jest --verbose",
+		"prepare": "husky install --verbose"
 	},
 	"repository": {
 		"type": "git",
@@ -21,6 +21,7 @@
 	},
 	"homepage": "https://github.com/northcoders/be-nc-news#readme",
 	"devDependencies": {
+		"@types/jest": "^29.5.2",
 		"husky": "^8.0.2",
 		"jest": "^27.5.1",
 		"jest-extended": "^2.0.0",
