@@ -111,3 +111,32 @@ describe("GET /api/articles", () => {
 			});
 	});
 });
+
+describe("GET /api/articles/:article_id/comment", () => {
+	it("status 200: return an array of comments based off the article id", () => {
+		return request(app)
+			.get("/api/articles/2/comments")
+			.expect(200)
+			.then(({ body: { comments } }) => {
+				expect(comments).not.toHaveLength(0);
+				comments.forEach((comment) => {
+					expect(comment).toMatchObject({
+						comment_id: expect.any(Number),
+						votes: expect.any(Number),
+						created_at: expect.any(String),
+						author: expect.any(String),
+						body: expect.any(String),
+						article_id: expect.any(Number),
+					});
+				});
+			});
+	});
+	it("should check to see that the comments return in order of most recent", () => {
+		return request(app)
+			.get("/api/articles/2/comments")
+			.expect(200)
+			.then(({ body: { comments } }) => {
+				expect(comments).toBeSortedBy("created_at", { descending: true });
+			});
+	});
+});
