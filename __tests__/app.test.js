@@ -87,7 +87,7 @@ describe("GET /api/articles", () => {
 			.get("/api/articles")
 			.expect(200)
 			.then(({ body: { articles } }) => {
-				expect(articles).not.toHaveLength(0);
+				expect(articles).toHaveLength(37);
 				articles.forEach((article) => {
 					expect(article).toMatchObject({
 						author: expect.any(String),
@@ -107,7 +107,6 @@ describe("GET /api/articles", () => {
 			.get("/api/articles")
 			.expect(200)
 			.then(({ body: { articles } }) => {
-				expect(articles).not.toHaveLength(0);
 				expect(articles).toBeSortedBy("created_at", { descending: true });
 			});
 	});
