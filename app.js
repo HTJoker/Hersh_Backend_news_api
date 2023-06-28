@@ -3,7 +3,7 @@ const {
 	getAllTopics,
 	getApi,
 	getArticleById,
-  getAllArticles,
+	getAllArticles,
 	getCommentsById,
 } = require("./controllers/app.controllers");
 const {
@@ -18,7 +18,7 @@ app.get("/api", getApi);
 
 app.get("/api/topics", getAllTopics);
 
-app.get("/api/articles", getAllArticles)
+app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
 
