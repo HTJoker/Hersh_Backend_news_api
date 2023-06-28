@@ -1,4 +1,5 @@
 const request = require("supertest");
+const { sort } = require("jest-sorted");
 const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
@@ -76,6 +77,37 @@ describe("GET /api/articles/:article_id", () => {
 			.expect(404)
 			.then(({ body }) => {
 				expect(body.msg).toBe("Not found");
+			});
+	});
+});
+
+describe("GET /api/articles", () => {
+	it("status 200: return an array of objects that have a comment_count as an added column", () => {
+		return request(app)
+			.get("/api/articles")
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toHaveLength(37);
+				articles.forEach((article) => {
+					expect(article).toMatchObject({
+						author: expect.any(String),
+						title: expect.any(String),
+						article_id: expect.any(Number),
+						topic: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(String),
+					});
+				});
+			});
+	});
+	it("should check to see that the default sort by is descending order by the created at column", () => {
+		return request(app)
+			.get("/api/articles")
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toBeSortedBy("created_at", { descending: true });
 			});
 	});
 });
