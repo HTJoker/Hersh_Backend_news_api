@@ -79,3 +79,14 @@ describe("GET /api/articles/:article_id", () => {
 			});
 	});
 });
+
+describe("GET /api/articles", () => {
+	it("status 200: return an array of objects", () => {
+		return request(app)
+			.get("/api/articles")
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toBeInstanceOf(Array);
+			});
+	});
+});

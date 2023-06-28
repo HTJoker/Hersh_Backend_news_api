@@ -6,6 +6,16 @@ exports.selectAllTopics = () => {
 	});
 };
 
+exports.selectAllArticles = () => {
+	return db
+		.query(
+			`SELECT articles.title, comments.votes FROM articles JOIN comments ON articles.article_id=comments.article_id LIMIT 5;`
+		)
+		.then(({ rows }) => {
+			return rows;
+		});
+};
+
 exports.selectArticleById = (article_id) => {
 	return db
 		.query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
