@@ -164,3 +164,61 @@ describe("GET /api/articles/:article_id/comment", () => {
 			});
 	});
 });
+
+describe("POST /api/articles/:article_id/comment", () => {
+	it("status 201: responds with a created a new comment", () => {
+		const requestBody = {
+			username: "butter_bridge",
+			body: "I did not expect that",
+		};
+		return request(app)
+			.post("/api/articles/1/comments")
+			.send(requestBody)
+			.expect(201)
+			.then(({ body: { comment } }) => {
+				expect(comment.comment_id).toBe(19);
+				expect(comment.body).toBe("I did not expect that");
+				expect(comment.votes).toBe(0);
+				expect(comment.author).toBe("butter_bridge");
+				expect(comment.article_id).toBe(1);
+				expect(comment.created_at).toEqual(expect.any(String));
+			});
+	});
+	it("status 400: return Bad request when given wrong id", () => {
+		const requestBody = {
+			username: "butter_bridge",
+			body: "I did not expect that",
+		};
+		return request(app)
+			.post("/api/articles/banana/comments")
+			.send(requestBody)
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Bad Request!");
+			});
+	});
+	it("status 400: return Bad request when missing body", () => {
+		const requestBody = {
+			username: "butter_bridge",
+		};
+		return request(app)
+			.post("/api/articles/banana/comments")
+			.send(requestBody)
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Bad Request!");
+			});
+	});
+	it("status 400: return Bad request when missing username", () => {
+		const requestBody = {
+			body: "I did not expect that",
+		};
+		return request(app)
+			.post("/api/articles/banana/comments")
+			.send(requestBody)
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Bad Request!");
+			});
+	});
+});
