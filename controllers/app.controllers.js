@@ -5,6 +5,7 @@ const {
 	selectCommentById,
 } = require("../models/app.models");
 const endpoints = require("../endpoints.json");
+const { checkArticleExists } = require("../models/articles.models");
 
 exports.getApi = (req, res) => {
 	res.status(200).send(endpoints);
@@ -37,9 +38,11 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getCommentsById = (req, res, next) => {
 	const { article_id } = req.params;
-	selectCommentById(article_id)
-		.then((comments) => {
-			res.status(200).send({ comments });
+	checkArticleExists(article_id)
+		.then(() => {
+			selectCommentById(article_id).then((comments) => {
+				res.status(200).send({ comments });
+			});
 		})
 		.catch(next);
 };
