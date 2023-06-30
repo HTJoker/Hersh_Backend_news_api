@@ -147,7 +147,7 @@ describe("GET /api/articles/:article_id/comment", () => {
 				expect(comments).toHaveLength(0);
 			});
 	});
-	it("status 400: return Bad request when given wrong id", () => {
+	it("status 400: return Bad request when given an invalid id", () => {
 		return request(app)
 			.get("/api/articles/banana/comments")
 			.expect(400)
@@ -161,6 +161,79 @@ describe("GET /api/articles/:article_id/comment", () => {
 			.expect(404)
 			.then(({ body }) => {
 				expect(body.msg).toBe("Not found");
+			});
+	});
+});
+
+describe("POST /api/articles/:article_id/comment", () => {
+	it("status 201: responds with a created a new comment", () => {
+		const requestBody = {
+			username: "butter_bridge",
+			body: "I did not expect that",
+		};
+		return request(app)
+			.post("/api/articles/1/comments")
+			.send(requestBody)
+			.expect(201)
+			.then(({ body: { comment } }) => {
+				expect(comment.comment_id).toBe(19);
+				expect(comment.body).toBe("I did not expect that");
+				expect(comment.votes).toBe(0);
+				expect(comment.author).toBe("butter_bridge");
+				expect(comment.article_id).toBe(1);
+				expect(comment.created_at).toEqual(expect.any(String));
+			});
+	});
+	it("status 400: return Bad request when given invalid id", () => {
+		const requestBody = {
+			username: "butter_bridge",
+			body: "I did not expect that",
+		};
+		return request(app)
+			.post("/api/articles/yes/comments")
+			.send(requestBody)
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Bad Request!");
+			});
+	});
+	it("status 400: return Bad request when missing body", () => {
+		return request(app)
+			.post("/api/articles/1/comments")
+			.send({ username: "butter_bridge" })
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Bad Request!");
+			});
+	});
+	it("status 404: return Bad request when missing username", () => {
+		return request(app)
+			.post("/api/articles/1/comments")
+			.send({ body: "I did not expect that" })
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Bad Request!");
+			});
+	});
+	it("status 404: returns not found when id is valid, but non-existent", () => {
+		return request(app)
+			.get("/api/articles/99999/comments")
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe("Not found");
+			});
+	});
+	it("status 404: return Not found user is not in the table", () => {
+		const requestBody = {
+			username: "JoeSwanson",
+			body: "I did not expect that",
+		};
+		return request(app)
+			.post("/api/articles/2/comments")
+			.send(requestBody)
+			.expect(404)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Not found");
 			});
 	});
 });

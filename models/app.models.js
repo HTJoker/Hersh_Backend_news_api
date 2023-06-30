@@ -41,3 +41,16 @@ exports.selectCommentById = (article_id) => {
 			return rows;
 		});
 };
+
+exports.insertNewComment = (article_id, body, username) => {
+	if (!body || !username) {
+		return Promise.reject({ status: 400, msg: "Bad Request!" });
+	}
+	const queryStr = `INSERT INTO comments(body, author, article_id) 
+	VALUES($1, $2, $3) RETURNING *;`;
+	const values = [body, username, article_id];
+
+	return db.query(queryStr, values).then(({ rows }) => {
+		return rows[0];
+	});
+};
