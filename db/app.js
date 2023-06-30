@@ -9,7 +9,7 @@ const {
 	patchArticleVotes,
 	removeComment,
 	getAllUsers,
-} = require("./controllers/app.controllers");
+} = require("../controllers/app.controllers");
 const {
 	handleServerError,
 	handlepsqlError,

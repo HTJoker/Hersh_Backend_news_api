@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { sort } = require("jest-sorted");
-const app = require("../app");
+const app = require("../db/app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const tdata = require("../db/data/test-data/index");
