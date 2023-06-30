@@ -89,3 +89,10 @@ exports.deleteSelectedComment = (comment_id) => {
 			return rows;
 		});
 };
+
+exports.selectAllUsers = () => {
+	return db.query(`SELECT * FROM users;`).then(({ rows }) => {
+		
+		return rows;
+	});
+};

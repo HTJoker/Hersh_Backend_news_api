@@ -8,6 +8,7 @@ const {
 	postCommentById,
 	patchArticleVotes,
 	removeComment,
+	getAllUsers,
 } = require("./controllers/app.controllers");
 const {
 	handleServerError,
@@ -28,11 +29,17 @@ app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getCommentsById);
 
+app.get("/api/users", getAllUsers);
+
 app.post("/api/articles/:article_id/comments", postCommentById);
 
 app.patch("/api/articles/:article_id", patchArticleVotes);
 
 app.delete("/api/comments/:comment_id", removeComment);
+
+app.all("*", (_, res) => {
+	res.status(404).send({ msg: "Not found" });
+});
 
 app.use(handlepsqlError);
 
