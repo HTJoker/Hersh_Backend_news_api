@@ -5,6 +5,7 @@ const {
 	selectCommentById,
 	insertNewComment,
 	updateArticleVotes,
+	deleteSelectedComment,
 } = require("../models/app.models");
 const endpoints = require("../endpoints.json");
 
@@ -65,8 +66,16 @@ exports.patchArticleVotes = (req, res, next) => {
 
 	updateArticleVotes(inc_votes, article_id)
 		.then((article) => {
-			console.log(article);
 			res.status(200).send({ article });
+		})
+		.catch(next);
+};
+
+exports.removeComment = (req, res, next) => {
+	const { comment_id } = req.params;
+	deleteSelectedComment(comment_id)
+		.then(() => {
+			res.status(204).send();
 		})
 		.catch(next);
 };

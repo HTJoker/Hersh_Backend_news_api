@@ -310,3 +310,25 @@ describe("PATCH /api/articles/:article_id", () => {
 			});
 	});
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+	it("status 204: should delete comment based off comment_id ", () => {
+		return request(app).delete("/api/comments/2").expect(204);
+	});
+	it("status 404: returning not found given a valid id, but it does not exist", () => {
+		return request(app)
+			.delete("/api/comments/20000")
+			.expect(404)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Not found");
+			});
+	});
+	it("status 404: returning not found given a valid id, but it does not exist", () => {
+		return request(app)
+			.delete("/api/comments/wrongId")
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Bad Request!");
+			});
+	});
+});
