@@ -349,6 +349,9 @@ describe("GET /api/users", () => {
 				});
 			});
 	});
+});
+
+describe("STATUS 404", () => {
 	it("status 404: should return not found when passed an invalid path", () => {
 		return request(app)
 			.get("/api/invalidPath")
