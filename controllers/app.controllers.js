@@ -4,7 +4,6 @@ const {
 	selectAllArticles,
 	selectCommentById,
 	insertNewComment,
-	selectUserByUsername,
 } = require("../models/app.models");
 const endpoints = require("../endpoints.json");
 

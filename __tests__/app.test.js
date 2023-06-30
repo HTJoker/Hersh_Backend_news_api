@@ -200,7 +200,7 @@ describe("POST /api/articles/:article_id/comment", () => {
 	it("status 400: return Bad request when missing body", () => {
 		return request(app)
 			.post("/api/articles/1/comments")
-			.send({ username: "butter_bridge", body: "" })
+			.send({ username: "butter_bridge" })
 			.expect(400)
 			.then(({ body: { msg } }) => {
 				expect(msg).toBe("Bad Request!");
@@ -221,6 +221,19 @@ describe("POST /api/articles/:article_id/comment", () => {
 			.expect(404)
 			.then(({ body }) => {
 				expect(body.msg).toBe("Not found");
+			});
+	});
+	it("status 404: return Not found user is not in the table", () => {
+		const requestBody = {
+			username: "JoeSwanson",
+			body: "I did not expect that",
+		};
+		return request(app)
+			.post("/api/articles/2/comments")
+			.send(requestBody)
+			.expect(404)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Not found");
 			});
 	});
 });
