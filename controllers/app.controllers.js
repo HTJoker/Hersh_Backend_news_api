@@ -4,6 +4,7 @@ const {
 	selectAllArticles,
 	selectCommentById,
 	insertNewComment,
+	selectUserByUsername,
 } = require("../models/app.models");
 const endpoints = require("../endpoints.json");
 
@@ -50,6 +51,7 @@ exports.getCommentsById = (req, res, next) => {
 exports.postCommentById = (req, res, next) => {
 	const { article_id } = req.params;
 	const { body, username } = req.body;
+
 	insertNewComment(article_id, body, username)
 		.then((comment) => {
 			res.status(201).send({ comment });

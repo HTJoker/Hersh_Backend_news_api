@@ -147,7 +147,7 @@ describe("GET /api/articles/:article_id/comment", () => {
 				expect(comments).toHaveLength(0);
 			});
 	});
-	it("status 400: return Bad request when given wrong id", () => {
+	it("status 400: return Bad request when given an invalid id", () => {
 		return request(app)
 			.get("/api/articles/banana/comments")
 			.expect(400)
@@ -184,13 +184,13 @@ describe("POST /api/articles/:article_id/comment", () => {
 				expect(comment.created_at).toEqual(expect.any(String));
 			});
 	});
-	it("status 400: return Bad request when given wrong id", () => {
+	it("status 400: return Bad request when given invalid id", () => {
 		const requestBody = {
 			username: "butter_bridge",
 			body: "I did not expect that",
 		};
 		return request(app)
-			.post("/api/articles/banana/comments")
+			.post("/api/articles/yes/comments")
 			.send(requestBody)
 			.expect(400)
 			.then(({ body: { msg } }) => {
@@ -198,27 +198,29 @@ describe("POST /api/articles/:article_id/comment", () => {
 			});
 	});
 	it("status 400: return Bad request when missing body", () => {
-		const requestBody = {
-			username: "butter_bridge",
-		};
 		return request(app)
-			.post("/api/articles/banana/comments")
-			.send(requestBody)
+			.post("/api/articles/1/comments")
+			.send({ username: "butter_bridge", body: "" })
 			.expect(400)
 			.then(({ body: { msg } }) => {
 				expect(msg).toBe("Bad Request!");
 			});
 	});
-	it("status 400: return Bad request when missing username", () => {
-		const requestBody = {
-			body: "I did not expect that",
-		};
+	it("status 404: return Bad request when missing username", () => {
 		return request(app)
-			.post("/api/articles/banana/comments")
-			.send(requestBody)
+			.post("/api/articles/1/comments")
+			.send({ body: "I did not expect that" })
 			.expect(400)
 			.then(({ body: { msg } }) => {
 				expect(msg).toBe("Bad Request!");
+			});
+	});
+	it("status 404: returns not found when id is valid, but non-existent", () => {
+		return request(app)
+			.get("/api/articles/99999/comments")
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe("Not found");
 			});
 	});
 });

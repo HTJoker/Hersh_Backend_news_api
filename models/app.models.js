@@ -42,13 +42,26 @@ exports.selectCommentById = (article_id) => {
 		});
 };
 
+exports.selectUserByUsername = (username) => {
+	return db
+		.query(`SELECT * FROM users WHERE username = $1`, [username])
+		.then(({ rows }) => {
+			if (!rows.length) {
+				return Promise.reject({ status: 404, msg: "Not found" });
+			}
+			return rows[0];
+		});
+};
+
 exports.insertNewComment = (article_id, body, username) => {
+	if (!body || !username) {
+		return Promise.reject({ status: 400, msg: "Bad Request!" });
+	}
 	const queryStr = `INSERT INTO comments(body, author, article_id) 
 	VALUES($1, $2, $3) RETURNING *;`;
 	const values = [body, username, article_id];
 
 	return db.query(queryStr, values).then(({ rows }) => {
-		console.log(rows);
 		return rows[0];
 	});
 };
