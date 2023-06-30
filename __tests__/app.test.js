@@ -237,3 +237,76 @@ describe("POST /api/articles/:article_id/comment", () => {
 			});
 	});
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+	it("status 200: should update the article votes property by the amount inputted", () => {
+		const votes = { inc_votes: 1 };
+		return request(app)
+			.patch("/api/articles/1")
+			.send(votes)
+			.expect(200)
+			.then(({ body: { article } }) => {
+				expect(article).toMatchObject({
+					article_id: 1,
+					title: "Living in the shadow of a great man",
+					topic: "mitch",
+					author: "butter_bridge",
+					body: "I find this existence challenging",
+					created_at: expect.any(String),
+					votes: 101,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+				});
+			});
+	});
+	it("status 200: should update the article votes property by the amount inputted when votes are negative", () => {
+		const votes = { inc_votes: -85 };
+		return request(app)
+			.patch("/api/articles/1")
+			.send(votes)
+			.expect(200)
+			.then(({ body: { article } }) => {
+				expect(article).toMatchObject({
+					article_id: 1,
+					title: "Living in the shadow of a great man",
+					topic: "mitch",
+					author: "butter_bridge",
+					body: "I find this existence challenging",
+					created_at: expect.any(String),
+					votes: 15,
+					article_img_url:
+						"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+				});
+			});
+	});
+	it("status 400: return bad request when passed an invalid votes input", () => {
+		const votes = { inc_votes: "more" };
+		return request(app)
+			.patch("/api/articles/1")
+			.send(votes)
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Bad Request!");
+			});
+	});
+	it("status 404: return Not found when passed a id that is valid, but does not exist", () => {
+		const votes = { inc_votes: 23 };
+		return request(app)
+			.patch("/api/articles/999999")
+			.send(votes)
+			.expect(404)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Not found");
+			});
+	});
+	it("status 400: return Bad request when passed a id that is invalid", () => {
+		const votes = { inc_votes: 23 };
+		return request(app)
+			.patch("/api/articles/justWrong")
+			.send(votes)
+			.expect(400)
+			.then(({ body: { msg } }) => {
+				expect(msg).toBe("Bad Request!");
+			});
+	});
+});
