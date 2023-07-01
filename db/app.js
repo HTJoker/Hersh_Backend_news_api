@@ -9,6 +9,7 @@ const {
 	patchArticleVotes,
 	removeComment,
 	getAllUsers,
+	getFilteredArticles,
 } = require("../controllers/app.controllers");
 const {
 	handleServerError,

@@ -7,6 +7,7 @@ const {
 	updateArticleVotes,
 	deleteSelectedComment,
 	selectAllUsers,
+	selectFilter,
 } = require("../models/app.models");
 const endpoints = require("../endpoints.json");
 
@@ -14,77 +15,83 @@ exports.getApi = (req, res) => {
 	res.status(200).send(endpoints);
 };
 
-exports.getAllTopics = (req, res, next) => {
-	selectAllTopics()
-		.then((topics) => {
-			res.status(200).send({ topics });
-		})
-		.catch(next);
+exports.getAllTopics = async (req, res, next) => {
+	try {
+		const topics = await selectAllTopics();
+		res.status(200).send({ topics });
+	} catch (err) {
+		return next(err);
+	}
 };
 
-exports.getAllArticles = (req, res, next) => {
-	selectAllArticles()
-		.then((articles) => {
-			res.status(200).send({ articles });
-		})
-		.catch(next);
+exports.getAllArticles = async (req, res, next) => {
+	try {
+		const articles = await selectAllArticles();
+		res.status(200).send({ articles });
+	} catch (err) {
+		return next(err);
+	}
 };
 
-exports.getArticleById = (req, res, next) => {
+exports.getArticleById = async (req, res, next) => {
 	const { article_id } = req.params;
-	selectArticleById(article_id)
-		.then((article) => {
-			res.status(200).send({ article });
-		})
-		.catch(next);
+	try {
+		const article = await selectArticleById(article_id);
+		res.status(200).send({ article });
+	} catch (err) {
+		return next(err);
+	}
 };
 
-exports.getCommentsById = (req, res, next) => {
+exports.getCommentsById = async (req, res, next) => {
 	const { article_id } = req.params;
-	selectArticleById(article_id)
-		.then(() => {
-			selectCommentById(article_id).then((comments) => {
-				res.status(200).send({ comments });
-			});
-		})
-		.catch(next);
+	try {
+		const data = await selectArticleById(article_id);
+		const comments = await selectCommentById(article_id);
+		res.status(200).send({ comments });
+	} catch (err) {
+		return next(err);
+	}
 };
 
-exports.postCommentById = (req, res, next) => {
+exports.postCommentById = async (req, res, next) => {
 	const { article_id } = req.params;
 	const { body, username } = req.body;
 
-	insertNewComment(article_id, body, username)
-		.then((comment) => {
-			res.status(201).send({ comment });
-		})
-		.catch(next);
+	try {
+		const comment = await insertNewComment(article_id, body, username);
+		res.status(201).send({ comment });
+	} catch (err) {
+		return next(err);
+	}
 };
 
-exports.patchArticleVotes = (req, res, next) => {
+exports.patchArticleVotes = async (req, res, next) => {
 	const { inc_votes } = req.body;
 	const { article_id } = req.params;
-
-	updateArticleVotes(inc_votes, article_id)
-		.then((article) => {
-			res.status(200).send({ article });
-		})
-		.catch(next);
+	try {
+		const article = await updateArticleVotes(inc_votes, article_id);
+		res.status(200).send({ article });
+	} catch (err) {
+		return next(err);
+	}
 };
 
-exports.removeComment = (req, res, next) => {
+exports.removeComment = async (req, res, next) => {
 	const { comment_id } = req.params;
-	deleteSelectedComment(comment_id)
-		.then(() => {
-			res.status(204).send();
-		})
-		.catch(next);
+	try {
+		const data = await deleteSelectedComment(comment_id);
+		res.status(204).send();
+	} catch (err) {
+		return next(err);
+	}
 };
 
-exports.getAllUsers = (req, res, next) => {
-	selectAllUsers()
-		.then((users) => {
-			res.status(200).send({ users });
-		})
-		.catch(next);
+exports.getAllUsers = async (req, res, next) => {
+	try {
+		const users = await selectAllUsers();
+		res.status(200).send({ users });
+	} catch (err) {
+		return next(err);
+	}
 };
